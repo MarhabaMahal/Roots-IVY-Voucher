@@ -1,0 +1,283 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{max-width:560px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.school-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.logo-box{width:44px;height:44px;border-radius:var(--border-radius-md);background:#7B1A1A;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-box span{color:#fff;font-size:10px;font-weight:500;text-align:center;line-height:1.2;letter-spacing:.5px}
+.school-name{font-family:var(--font-serif);font-size:17px;color:var(--color-text-primary);font-weight:500;line-height:1.3}
+.school-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.steps{display:flex;gap:6px;margin-bottom:1.5rem;align-items:center}
+.step-dot{height:6px;border-radius:3px;background:var(--color-border-tertiary);transition:all .3s;flex:1}
+.step-dot.done{background:#7B1A1A}
+.step-dot.active{background:#7B1A1A;flex:2}
+.section-title{font-family:var(--font-serif);font-size:20px;color:var(--color-text-primary);margin-bottom:.25rem;font-weight:500}
+.section-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;color:var(--color-text-secondary);margin-bottom:5px;font-weight:500;letter-spacing:.3px;text-transform:uppercase}
+.field input{width:100%;padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:15px;background:var(--color-background-primary);color:var(--color-text-primary);transition:border .15s}
+.field input:focus{outline:none;border-color:#7B1A1A}
+.btn-primary{width:100%;padding:12px;background:#7B1A1A;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:500;cursor:pointer;margin-top:.5rem;letter-spacing:.2px}
+.btn-primary:hover{background:#6a1515}
+.btn-secondary{width:100%;padding:11px;background:var(--color-background-primary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:15px;cursor:pointer;margin-top:.5rem}
+.btn-secondary:hover{background:var(--color-background-secondary)}
+.error-box{background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:1rem;display:none}
+.error-box p{font-size:13px;color:var(--color-text-danger)}
+.choice-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;cursor:pointer;transition:border-color .15s;margin-bottom:.75rem;display:flex;align-items:center;gap:12px}
+.choice-card:hover{border-color:#7B1A1A}
+.choice-icon{width:40px;height:40px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.choice-icon.red{background:#fef2f2}
+.choice-icon.gray{background:var(--color-background-secondary)}
+.choice-title{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.choice-desc{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.pay-method{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:.75rem}
+.pay-method-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.pay-detail{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.pay-key{font-size:13px;color:var(--color-text-secondary)}
+.pay-val{font-size:13px;font-weight:500;color:var(--color-text-primary);font-family:var(--font-mono)}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1.25rem 0}
+.already-box{text-align:center;padding:2rem 1rem}
+.already-icon{font-size:32px;margin-bottom:.75rem}
+.already-title{font-size:18px;font-weight:500;font-family:var(--font-serif);margin-bottom:.5rem;color:var(--color-text-primary)}
+.already-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.voucher{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden;margin-top:1rem}
+.voucher-head{background:#7B1A1A;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.voucher-head-left{color:#fff}
+.voucher-head-title{font-size:13px;font-weight:500;letter-spacing:.3px;opacity:.8;text-transform:uppercase}
+.voucher-head-name{font-size:17px;font-weight:500;font-family:var(--font-serif);margin-top:2px}
+.voucher-head-right{text-align:right;color:#fff}
+.voucher-bill{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+.voucher-date{font-size:12px;opacity:.85;margin-top:2px}
+.voucher-body{padding:14px 16px}
+.voucher-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.voucher-row:last-child{border-bottom:none}
+.voucher-row-key{color:var(--color-text-secondary)}
+.voucher-row-val{color:var(--color-text-primary);font-weight:500}
+.voucher-total{display:flex;justify-content:space-between;padding:10px 14px;background:var(--color-background-secondary);font-weight:500}
+.voucher-total-key{font-size:14px;color:var(--color-text-secondary)}
+.voucher-total-val{font-size:18px;color:#7B1A1A;font-family:var(--font-serif)}
+.voucher-bank{padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.voucher-bank-title{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-secondary);margin-bottom:8px;font-weight:500}
+.voucher-bank-detail{display:flex;gap:8px;align-items:center;margin-bottom:5px;font-size:13px;color:var(--color-text-primary)}
+.voucher-bank-detail i{color:#7B1A1A;font-size:16px}
+.voucher-note{font-size:11px;color:var(--color-text-tertiary);padding:8px 16px 12px;text-align:center;line-height:1.5}
+.print-btn{width:100%;padding:11px;background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:14px;cursor:pointer;margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:8px}
+.print-btn:hover{background:var(--color-background-primary);border-color:var(--color-border-secondary)}
+.tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;background:#fef2f2;color:#7B1A1A;border:0.5px solid #fca5a5;font-weight:500;margin-bottom:1rem}
+.step-hidden{display:none}
+.info-bar{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 14px;margin-bottom:1.25rem;display:flex;justify-content:space-between;font-size:13px}
+.info-bar-item{}
+.info-bar-label{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.3px}
+.info-bar-val{color:var(--color-text-primary);font-weight:500;margin-top:1px}
+</style>
+
+<h2 class="sr-only">Roots IVY International Schools — open house fee payment portal</h2>
+
+<div class="wrap">
+  <div class="school-header">
+    <div class="logo-box"><span>ROOTS<br>IVY</span></div>
+    <div>
+      <div class="school-name">Roots IVY International Schools</div>
+      <div class="school-sub">Open House Fee Payment Portal</div>
+    </div>
+  </div>
+
+  <div class="steps" id="steps-bar">
+    <div class="step-dot active" id="s1"></div>
+    <div class="step-dot" id="s2"></div>
+    <div class="step-dot" id="s3"></div>
+  </div>
+
+  <div id="step1">
+    <div class="section-title">Student details</div>
+    <div class="section-sub">Please fill in the information exactly as it appears on the fee voucher.</div>
+    <div id="form-error" class="error-box"><p id="form-error-msg"></p></div>
+    <div class="field"><label>Full name of student</label><input id="student-name" placeholder="e.g. Seerat Uz Zahra" /></div>
+    <div class="field"><label>Full name of father / guardian</label><input id="father-name" placeholder="e.g. Ch Azeem Ul Hassan" /></div>
+    <div class="field"><label>Father's CNIC</label><input id="cnic" placeholder="e.g. 33104-9069165-1" maxlength="15" /></div>
+    <div class="field"><label>Fee amount (from your voucher, Rs.)</label><input id="fee-amount" placeholder="e.g. 93600" type="number" /></div>
+    <button class="btn-primary" onclick="handleStep1()">Continue <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+
+  <div id="step2" class="step-hidden">
+    <div id="already-block" class="step-hidden">
+      <div class="already-box">
+        <div class="already-icon"><i class="ti ti-circle-check" style="font-size:40px;color:#7B1A1A" aria-hidden="true"></i></div>
+        <div class="already-title">Voucher already issued</div>
+        <div class="already-desc">A digital fee voucher was previously generated for this CNIC. For security, only one voucher can be issued per student. Please contact the school office if you need a replacement.</div>
+        <div style="margin-top:1.25rem;padding:10px 14px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-secondary)"><i class="ti ti-phone" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>School helpline: <strong style="color:var(--color-text-primary)">051-000-0000</strong></div>
+      </div>
+    </div>
+    <div id="choice-block" class="step-hidden">
+      <div class="section-title">Fee payment</div>
+      <div class="section-sub">How would you like to proceed with your fee payment today?</div>
+      <div id="student-bar" class="info-bar">
+        <div class="info-bar-item"><div class="info-bar-label">Student</div><div class="info-bar-val" id="bar-student">—</div></div>
+        <div class="info-bar-item" style="text-align:right"><div class="info-bar-label">Amount due</div><div class="info-bar-val" id="bar-amount" style="color:#7B1A1A">—</div></div>
+      </div>
+      <div class="choice-card" onclick="handleChoice('now')">
+        <div class="choice-icon red"><i class="ti ti-credit-card" style="font-size:20px;color:#7B1A1A" aria-hidden="true"></i></div>
+        <div>
+          <div class="choice-title">Pay now</div>
+          <div class="choice-desc">See bank account, Raast, EasyPaisa & JazzCash details</div>
+        </div>
+        <i class="ti ti-chevron-right" style="margin-left:auto;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+      </div>
+      <div class="choice-card" onclick="handleChoice('later')">
+        <div class="choice-icon gray"><i class="ti ti-file-text" style="font-size:20px;color:var(--color-text-secondary)" aria-hidden="true"></i></div>
+        <div>
+          <div class="choice-title">Pay later (within 3 days)</div>
+          <div class="choice-desc">Download a one-time digital fee voucher to pay at any HBL branch</div>
+        </div>
+        <i class="ti ti-chevron-right" style="margin-left:auto;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+      </div>
+      <p style="font-size:11px;color:var(--color-text-tertiary);text-align:center;margin-top:.5rem">Late payment charge of Rs. 100/day applies after due date</p>
+    </div>
+  </div>
+
+  <div id="step3-now" class="step-hidden">
+    <div class="tag"><i class="ti ti-bolt" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>Pay right now</div>
+    <div class="section-title">Payment details</div>
+    <div class="section-sub">Transfer your fee using any of the methods below. After payment, WhatsApp your receipt to <strong>051-000-0000</strong>.</div>
+
+    <div class="pay-method">
+      <div class="pay-method-title"><i class="ti ti-building-bank" style="vertical-align:-2px;margin-right:5px" aria-hidden="true"></i>HBL bank transfer / branch deposit</div>
+      <div class="pay-detail"><span class="pay-key">Account title</span><span class="pay-val">Roots IVY International</span></div>
+      <div class="pay-detail"><span class="pay-key">Account number</span><span class="pay-val">0042-00427901414203</span></div>
+      <div class="pay-detail"><span class="pay-key">Bank</span><span class="pay-val">HBL — All branches nationwide</span></div>
+      <div class="pay-detail"><span class="pay-key">OneBill number</span><span class="pay-val">10011450655133729</span></div>
+    </div>
+
+    <div class="pay-method">
+      <div class="pay-method-title"><i class="ti ti-transfer" style="vertical-align:-2px;margin-right:5px" aria-hidden="true"></i>Raast (instant — any bank)</div>
+      <div class="pay-detail"><span class="pay-key">Raast ID / IBAN</span><span class="pay-val">PK36HABB0042790141</span></div>
+      <div class="pay-detail"><span class="pay-key">Account title</span><span class="pay-val">Roots IVY International</span></div>
+      <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px">Send via any banking app → Raast → Enter IBAN above</p>
+    </div>
+
+    <div class="pay-method">
+      <div class="pay-method-title"><i class="ti ti-device-mobile" style="vertical-align:-2px;margin-right:5px" aria-hidden="true"></i>EasyPaisa / JazzCash</div>
+      <div class="pay-detail"><span class="pay-key">Merchant account</span><span class="pay-val">Add from school admin</span></div>
+      <div class="pay-detail"><span class="pay-key">Reference</span><span class="pay-val" id="np-cnic-ref">—</span></div>
+      <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px">Open app → Send money → Enter merchant number → Use your CNIC as reference</p>
+    </div>
+
+    <div class="divider"></div>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6">After transferring, send a screenshot of your transaction receipt on WhatsApp to <strong style="color:var(--color-text-primary)">051-000-0000</strong> along with your child's admission number.</p>
+    <button class="btn-secondary" onclick="goBack()" style="margin-top:1rem"><i class="ti ti-arrow-left" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>Go back</button>
+  </div>
+
+  <div id="step3-later" class="step-hidden">
+    <div class="tag"><i class="ti ti-file-download" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>One-time digital voucher</div>
+    <div class="section-title">Your fee voucher</div>
+    <div class="section-sub">This voucher has been generated once and cannot be re-issued. Please save or print it now.</div>
+
+    <div class="voucher" id="voucher-card">
+      <div class="voucher-head">
+        <div class="voucher-head-left">
+          <div class="voucher-head-title">Fee payment voucher</div>
+          <div class="voucher-head-name" id="v-student">—</div>
+          <div style="font-size:12px;opacity:.75;margin-top:2px" id="v-father">—</div>
+        </div>
+        <div class="voucher-head-right">
+          <div class="voucher-bill">Bill no.</div>
+          <div style="font-size:16px;font-weight:500;margin-top:1px">5133729</div>
+          <div class="voucher-date" id="v-date">—</div>
+        </div>
+      </div>
+      <div class="voucher-body">
+        <div class="voucher-row"><span class="voucher-row-key">Student name</span><span class="voucher-row-val" id="v-name-row">—</span></div>
+        <div class="voucher-row"><span class="voucher-row-key">Guardian</span><span class="voucher-row-val" id="v-guardian-row">—</span></div>
+        <div class="voucher-row"><span class="voucher-row-key">Father's CNIC</span><span class="voucher-row-val" id="v-cnic-row">—</span></div>
+        <div class="voucher-row"><span class="voucher-row-key">Due date</span><span class="voucher-row-val">29-Apr-2026</span></div>
+        <div class="voucher-row"><span class="voucher-row-key">Installment</span><span class="voucher-row-val">4 — Installment</span></div>
+      </div>
+      <div class="voucher-total">
+        <span class="voucher-total-key">Total amount due</span>
+        <span class="voucher-total-val" id="v-amount">Rs. —</span>
+      </div>
+      <div class="voucher-bank">
+        <div class="voucher-bank-title">Pay at any HBL branch or via online transfer</div>
+        <div class="voucher-bank-detail"><i class="ti ti-building-bank" aria-hidden="true"></i>Account: <strong>0042-00427901414203</strong></div>
+        <div class="voucher-bank-detail"><i class="ti ti-transfer" aria-hidden="true"></i>OneBill: <strong>10011450655133729</strong></div>
+        <div class="voucher-bank-detail"><i class="ti ti-device-mobile" aria-hidden="true"></i>Raast IBAN: <strong>PK36HABB0042790141</strong></div>
+      </div>
+      <div class="voucher-note">This is a digitally generated voucher issued on <span id="v-issued-on">—</span>. Late payment charge of Rs. 100/day applies after due date. For queries: 051-000-0000</div>
+    </div>
+    <button class="print-btn" onclick="window.print()"><i class="ti ti-printer" aria-hidden="true"></i>Print / save as PDF</button>
+    <button class="btn-secondary" onclick="goBack()"><i class="ti ti-arrow-left" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>Go back</button>
+  </div>
+</div>
+
+<script>
+let fData={};
+function showError(msg){const b=document.getElementById('form-error');const m=document.getElementById('form-error-msg');b.style.display='block';m.textContent=msg;}
+function hideError(){document.getElementById('form-error').style.display='none';}
+function setStep(n){
+  const dots=['s1','s2','s3'];
+  dots.forEach((id,i)=>{
+    const d=document.getElementById(id);
+    d.classList.remove('active','done');
+    if(i<n-1)d.classList.add('done');
+    else if(i===n-1)d.classList.add('active');
+  });
+}
+async function handleStep1(){
+  const sn=document.getElementById('student-name').value.trim();
+  const fn=document.getElementById('father-name').value.trim();
+  const cn=document.getElementById('cnic').value.trim();
+  const fa=document.getElementById('fee-amount').value.trim();
+  hideError();
+  if(!sn){showError('Please enter the full name of the student.');return;}
+  if(!fn){showError("Please enter the father's full name.");return;}
+  if(!cn){showError("Please enter the father's CNIC.");return;}
+  if(!fa){showError('Please enter the fee amount from your voucher.');return;}
+  fData={student:sn,father:fn,cnic:cn,amount:fa};
+  document.getElementById('bar-student').textContent=sn;
+  document.getElementById('bar-amount').textContent='Rs. '+Number(fa).toLocaleString();
+  document.getElementById('np-cnic-ref').textContent=cn;
+  document.getElementById('step1').classList.add('step-hidden');
+  document.getElementById('step2').classList.remove('step-hidden');
+  setStep(2);
+  let issued=false;
+  try{const r=await window.storage.get('voucher_cnic_'+cn);if(r&&r.value)issued=true;}catch(e){}
+  if(issued){
+    document.getElementById('already-block').classList.remove('step-hidden');
+  }else{
+    document.getElementById('choice-block').classList.remove('step-hidden');
+  }
+}
+function handleChoice(type){
+  document.getElementById('step2').classList.add('step-hidden');
+  setStep(3);
+  if(type==='now'){
+    document.getElementById('step3-now').classList.remove('step-hidden');
+  }else{
+    issueVoucher();
+  }
+}
+async function issueVoucher(){
+  try{await window.storage.set('voucher_cnic_'+fData.cnic,JSON.stringify({issuedAt:new Date().toISOString(),student:fData.student}));}catch(e){}
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'});
+  document.getElementById('v-student').textContent=fData.student;
+  document.getElementById('v-father').textContent=fData.father;
+  document.getElementById('v-name-row').textContent=fData.student;
+  document.getElementById('v-guardian-row').textContent=fData.father;
+  document.getElementById('v-cnic-row').textContent=fData.cnic;
+  document.getElementById('v-date').textContent=dateStr;
+  document.getElementById('v-issued-on').textContent=dateStr;
+  document.getElementById('v-amount').textContent='Rs. '+Number(fData.amount).toLocaleString();
+  document.getElementById('step3-later').classList.remove('step-hidden');
+}
+function goBack(){
+  document.getElementById('step3-now').classList.add('step-hidden');
+  document.getElementById('step3-later').classList.add('step-hidden');
+  document.getElementById('already-block').classList.add('step-hidden');
+  document.getElementById('choice-block').classList.add('step-hidden');
+  document.getElementById('step2').classList.add('step-hidden');
+  document.getElementById('step1').classList.remove('step-hidden');
+  setStep(1);
+  hideError();
+}
+</script>
