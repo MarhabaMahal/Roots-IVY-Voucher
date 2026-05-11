@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roots IVY FSD — IGCSE Fee Voucher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ============================================================
+       ✏️  EDITABLE CONFIG — change these values before deploying
+       ============================================================ */
+    /*
+      FEE_AMOUNT is set in the JS below — search for:
+        const FEE_AMOUNT = "PKR ____";
+      Replace PKR ____ with your actual amount e.g. "PKR 45,000"
+    */
+
+    :root {
+      --ink:       #0d0d0d;
+      --paper:     #f5f0e8;
+      --gold:      #b8860b;
+      --gold-lt:   #d4a017;
+      --red:       #c0392b;
+      --border:    #d6cfc0;
+      --shadow:    rgba(13,13,13,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grain texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    .school-header {
+      text-align: center;
+      margin-bottom: 32px;
+      animation: fadeDown 0.6s ease both;
+    }
+    .school-header .badge {
+      display: inline-block;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      margin-bottom: 12px;
+    }
+    .school-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 7vw, 42px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+    .school-header h1 span { color: var(--gold); }
+    .school-header p {
+      margin-top: 6px;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 300;
+    }
+
+    /* ── Card ────────────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 40px var(--shadow), 0 2px 8px var(--shadow);
+      padding: 40px 36px;
+      position: relative;
+      animation: fadeUp 0.6s 0.15s ease both;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 50%, var(--gold) 100%);
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: #888;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Countdown ───────────────────────────────────────── */
+    .countdown-wrap {
+      background: var(--ink);
+      color: #fff;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .countdown-wrap .cd-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #aaa;
+      white-space: nowrap;
+    }
+    .countdown-wrap .cd-timer {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold-lt);
+      letter-spacing: 1px;
+      flex: 1;
+      text-align: right;
+    }
+
+    /* ── Form ────────────────────────────────────────────── */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .field input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      padding: 13px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,134,11,0.12);
+    }
+    .field input::placeholder { color: #bbb; }
+
+    .cnic-hint {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    .btn {
+      width: 100%;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn:hover { background: #222; }
+    .btn:active { transform: scale(0.99); }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* ── Voucher Output ──────────────────────────────────── */
+    #voucher-section { display: none; }
+
+    .voucher {
+      border: 2px solid var(--ink);
+      position: relative;
+      margin-top: 32px;
+      background: #fff;
+    }
+    .voucher::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px dashed var(--border);
+      pointer-events: none;
+    }
+
+    .voucher-top {
+      background: var(--ink);
+      color: #fff;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .voucher-top .vt-left h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .voucher-top .vt-left h2 span { color: var(--gold-lt); }
+    .voucher-top .vt-left p {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-top: 3px;
+    }
+    .voucher-top .vt-right {
+      text-align: right;
+    }
+    .voucher-top .vt-right .v-id {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: var(--gold-lt);
+    }
+    .voucher-top .vt-right .v-type {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .voucher-body {
+      padding: 24px;
+    }
+
+    .v-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .v-row:last-of-type { border-bottom: none; }
+    .v-key {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .v-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .voucher-fee-band {
+      background: var(--gold);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .voucher-fee-band .fee-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+    }
+    .voucher-fee-band .fee-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .voucher-footer {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .vf-dates { font-size: 11px; color: #888; line-height: 1.6; }
+    .vf-dates strong { color: var(--ink); }
+    .validity-pill {
+      background: #fff3cd;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+    }
+
+    .expiry-warn {
+      background: #fef2f2;
+      border-left: 3px solid var(--red);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 16px;
+    }
+
+    /* Print button */
+    .print-btn {
+      width: 100%;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      padding: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .print-btn:hover { background: var(--gold); color: #fff; }
+
+    /* ── Closed / Not-yet pages ──────────────────────────── */
+    #closed-section, #notyet-section { display: none; }
+
+    .status-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 40px var(--shadow);
+      padding: 56px 36px;
+      text-align: center;
+      animation: fadeUp 0.6s ease both;
+    }
+    .status-card .status-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    .status-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+    .status-card p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.7;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+    .status-card .status-meta {
+      margin-top: 24px;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    /* ── Animations ──────────────────────────────────────── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Print styles ────────────────────────────────────── */
+    @media print {
+      body { background: #fff; padding: 0; }
+      body::before { display: none; }
+      .school-header, .card > *:not(#voucher-section) { display: none !important; }
+      #voucher-section { display: block !important; }
+      .print-btn { display: none; }
+      .wrap { max-width: 100%; }
+      .card { border: none; box-shadow: none; padding: 0; }
+      .card::before { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px; }
+      .voucher-top { flex-direction: column; gap: 12px; }
+      .vt-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="school-header">
+    <div class="badge">Official Document</div>
+    <h1>Roots <span>IVY</span> FSD</h1>
+    <p>IGCSE Programme — Fee Voucher</p>
+  </div>
+
+  <!-- ── REGISTRATION FORM ─────────────────────────────── -->
+  <div class="card" id="form-section">
+    <div class="card-title">Fee Voucher Registration</div>
+    <div class="card-subtitle">IGCSE Discount Offer</div>
+
+    <div class="countdown-wrap">
+      <span class="cd-label">Registration closes in</span>
+      <span class="cd-timer" id="countdown">--:--:--</span>
+    </div>
+
+    <div class="field">
+      <label>Student Full Name</label>
+      <input type="text" id="studentName" placeholder="e.g. Ahmed Ali Khan" autocomplete="off"/>
+    </div>
+    <div class="field">
+      <label>Guardian Full Name</label>
+      <input type="text" id="guardianName" placeholder="e.g. Muhammad Ali Khan" autocomplete="off"/>
+    </div>
+    <div class="field">
+      <label>Guardian CNIC Number</label>
+      <input type="text" id="cnic" placeholder="XXXXX-XXXXXXX-X" maxlength="15" autocomplete="off"/>
+      <div class="cnic-hint">Format: 42101-1234567-8</div>
+    </div>
+
+    <button class="btn" id="generateBtn" onclick="generateVoucher()">Generate Fee Voucher</button>
+
+    <!-- Voucher output lives inside the card for print -->
+    <div id="voucher-section">
+      <div class="voucher" id="voucherEl">
+        <div class="voucher-top">
+          <div class="vt-left">
+            <h2>Roots <span>IVY</span> FSD</h2>
+            <p>IGCSE Programme</p>
+          </div>
+          <div class="vt-right">
+            <div class="v-id" id="v-id"></div>
+            <div class="v-type">Fee Voucher</div>
+          </div>
+        </div>
+
+        <div class="voucher-body">
+          <div class="v-row">
+            <span class="v-key">Student Name</span>
+            <span class="v-val" id="v-student"></span>
+          </div>
+          <div class="v-row">
+            <span class="v-key">Guardian Name</span>
+            <span class="v-val" id="v-guardian"></span>
+          </div>
+          <div class="v-row">
+            <span class="v-key">CNIC Number</span>
+            <span class="v-val" id="v-cnic"></span>
+          </div>
+          <div class="v-row">
+            <span class="v-key">Programme</span>
+            <span class="v-val">IGCSE</span>
+          </div>
+        </div>
+
+        <div class="voucher-fee-band">
+          <span class="fee-label">Special Flat Fee</span>
+          <span class="fee-amount" id="v-fee"></span>
+        </div>
+
+        <div class="voucher-footer">
+          <div class="vf-dates">
+            <div>Issued: <strong id="v-issued"></strong></div>
+            <div>Valid until: <strong id="v-expiry"></strong></div>
+          </div>
+          <div class="validity-pill">Valid 3 Days Only</div>
+        </div>
+      </div>
+
+      <div class="expiry-warn" id="expiry-warn" style="display:none">
+        ⚠ This voucher has expired. Please contact the school office.
+      </div>
+
+      <button class="print-btn" onclick="window.print()">⬇ Print / Save Voucher</button>
+    </div>
+  </div>
+
+  <!-- ── REGISTRATION CLOSED ───────────────────────────── -->
+  <div class="card" id="closed-section">
+    <div class="status-card">
+      <div class="status-icon">🔒</div>
+      <h2>Registration Closed</h2>
+      <p>The IGCSE fee voucher registration window has ended. Please contact the school office for further assistance.</p>
+      <div class="status-meta">Roots IVY FSD &mdash; IGCSE Programme</div>
+    </div>
+  </div>
+
+  <!-- ── NOT YET OPEN ───────────────────────────────────── -->
+  <div class="card" id="notyet-section">
+    <div class="status-card">
+      <div class="status-icon">🕛</div>
+      <h2>Not Yet Open</h2>
+      <p>Registration opens on <strong>14 May 2026 at 12:00 AM</strong>. Please scan the QR code again after it opens.</p>
+      <div class="status-meta" id="notyet-countdown"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ================================================================
+     ✏️  EDIT HERE — Set your fee amount before deploying
+     ================================================================ */
+  const FEE_AMOUNT = "PKR ____";   // ← Replace with e.g. "PKR 45,000"
+
+  /* ================================================================
+     CONFIG — dates (PKT = UTC+5)
+     ================================================================ */
+  // Registration: 14 May 2026 00:00 PKT → 13 May 2026 19:00 UTC
+  const REG_OPEN  = new Date("2026-05-13T19:00:00Z");
+  // Registration closes: 14 May 2026 24:00 PKT = 15 May 2026 00:00 PKT → 14 May 2026 19:00 UTC
+  const REG_CLOSE = new Date("2026-05-14T19:00:00Z");
+
+  /* ================================================================
+     INIT — decide which screen to show
+     ================================================================ */
+  function init() {
+    const now = new Date();
+    if (now < REG_OPEN) {
+      showSection("notyet-section");
+      startNotyetCountdown();
+    } else if (now >= REG_CLOSE) {
+      showSection("closed-section");
+    } else {
+      showSection("form-section");
+      startCountdown();
+      formatCNIC();
+    }
+  }
+
+  function showSection(id) {
+    ["form-section","closed-section","notyet-section"].forEach(s => {
+      document.getElementById(s).style.display = s === id ? "block" : "none";
+    });
+  }
+
+  /* ================================================================
+     COUNTDOWN — inside the form
+     ================================================================ */
+  function startCountdown() {
+    function tick() {
+      const now  = new Date();
+      const diff = REG_CLOSE - now;
+      if (diff <= 0) {
+        showSection("closed-section");
+        return;
+      }
+      const h = String(Math.floor(diff / 3600000)).padStart(2,"0");
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2,"0");
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2,"0");
+      document.getElementById("countdown").textContent = `${h}:${m}:${s}`;
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  function startNotyetCountdown() {
+    function tick() {
+      const now  = new Date();
+      const diff = REG_OPEN - now;
+      if (diff <= 0) { init(); return; }
+      const d = Math.floor(diff / 86400000);
+      const h = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,"0");
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2,"0");
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2,"0");
+      document.getElementById("notyet-countdown").textContent =
+        `Opens in ${d > 0 ? d+"d " : ""}${h}:${m}:${s}`;
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  /* ================================================================
+     CNIC AUTO-FORMAT  XXXXX-XXXXXXX-X
+     ================================================================ */
+  function formatCNIC() {
+    document.getElementById("cnic").addEventListener("input", function(e) {
+      let v = e.target.value.replace(/\D/g,"");
+      if (v.length > 5)  v = v.slice(0,5) + "-" + v.slice(5);
+      if (v.length > 13) v = v.slice(0,13) + "-" + v.slice(13);
+      e.target.value = v.slice(0,15);
+    });
+  }
+
+  /* ================================================================
+     GENERATE VOUCHER
+     ================================================================ */
+  function generateVoucher() {
+    const studentName  = document.getElementById("studentName").value.trim();
+    const guardianName = document.getElementById("guardianName").value.trim();
+    const cnic         = document.getElementById("cnic").value.trim();
+
+    if (!studentName || !guardianName || !cnic) {
+      alert("Please fill in all fields before generating the voucher.");
+      return;
+    }
+    if (!/^\d{5}-\d{7}-\d$/.test(cnic)) {
+      alert("Please enter a valid CNIC in the format: XXXXX-XXXXXXX-X");
+      return;
+    }
+
+    // Voucher ID
+    const vId = "RIV-" + Date.now().toString(36).toUpperCase().slice(-6);
+
+    // Dates
+    const now     = new Date();
+    const expiry  = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+    const fmtOpts = { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true };
+    const issuedStr = now.toLocaleString("en-PK", fmtOpts);
+    const expiryStr = expiry.toLocaleString("en-PK", fmtOpts);
+
+    document.getElementById("v-id").textContent      = vId;
+    document.getElementById("v-student").textContent  = studentName;
+    document.getElementById("v-guardian").textContent = guardianName;
+    document.getElementById("v-cnic").textContent     = cnic;
+    document.getElementById("v-fee").textContent      = FEE_AMOUNT;
+    document.getElementById("v-issued").textContent   = issuedStr;
+    document.getElementById("v-expiry").textContent   = expiryStr;
+
+    // Check if already expired (edge case)
+    if (expiry < now) {
+      document.getElementById("expiry-warn").style.display = "block";
+    }
+
+    // Show voucher
+    document.getElementById("voucher-section").style.display = "block";
+    document.getElementById("generateBtn").disabled = true;
+    document.getElementById("generateBtn").textContent = "Voucher Generated";
+
+    // Scroll to voucher
+    setTimeout(() => {
+      document.getElementById("voucher-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }
+
+  init();
+</script>
+</body>
+</html>
